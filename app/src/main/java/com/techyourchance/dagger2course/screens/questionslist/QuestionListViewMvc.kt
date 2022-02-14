@@ -11,11 +11,16 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.techyourchance.dagger2course.R
 import com.techyourchance.dagger2course.questions.Question
+import com.techyourchance.dagger2course.screens.common.viewmvc.BaseViewMvc
 import java.util.ArrayList
 
 class QuestionListViewMvc(
     private val layoutInflater: LayoutInflater,
     private val parent: ViewGroup?
+) : BaseViewMvc<QuestionListViewMvc.Listener>(
+    layoutInflater,
+    parent,
+    R.layout.layout_questions_list
 ) {
 
     interface Listener {
@@ -26,12 +31,9 @@ class QuestionListViewMvc(
     private val swipeRefresh: SwipeRefreshLayout
     private val recyclerView: RecyclerView
     private val questionsAdapter: QuestionsAdapter
-    val rootView: View
     val context: Context get() = rootView.context
-    val listeners = HashSet<Listener>()
 
     init {
-        rootView = layoutInflater.inflate(R.layout.layout_questions_list, parent, false)
 
         // init pull-down-to-refresh
         swipeRefresh = findViewById(R.id.swipeRefresh)
@@ -50,18 +52,6 @@ class QuestionListViewMvc(
             }
         }
         recyclerView.adapter = questionsAdapter
-    }
-
-    fun <T : View?> findViewById(@IdRes id: Int): T {
-        return rootView.findViewById<T>(id)
-    }
-
-    fun registerListener(listener: Listener) {
-        listeners.add(listener)
-    }
-
-    fun unregisterListener(listener: Listener) {
-        listeners.remove(listener)
     }
 
     fun showProgressIndication() {
