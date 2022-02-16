@@ -64,7 +64,7 @@ class QuestionListViewMvc(
         }
     }
 
-    fun bildQuestions(questions: List<Question>) {
+    fun bindQuestions(questions: List<Question>) {
         questionsAdapter.bindData(questions)
     }
 
