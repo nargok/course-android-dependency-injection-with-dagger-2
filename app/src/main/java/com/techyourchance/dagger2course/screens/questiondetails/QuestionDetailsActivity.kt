@@ -8,14 +8,11 @@ import android.text.Html
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.techyourchance.dagger2course.Constants
 import com.techyourchance.dagger2course.R
-import com.techyourchance.dagger2course.networking.StackoverflowApi
+import com.techyourchance.dagger2course.questions.FetchQuestionDetailUseCase
 import com.techyourchance.dagger2course.screens.common.dialogs.ServerErrorDialogFragment
 import com.techyourchance.dagger2course.screens.common.toolbar.MyToolbar
 import kotlinx.coroutines.*
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class QuestionDetailsActivity : AppCompatActivity() {
 
@@ -25,9 +22,8 @@ class QuestionDetailsActivity : AppCompatActivity() {
     private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var txtQuestionBody: TextView
 
-    private lateinit var stackoverflowApi: StackoverflowApi
-
     private lateinit var questionId: String
+    private lateinit var fetchQuestionDetailUseCase: FetchQuestionDetailUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,15 +39,10 @@ class QuestionDetailsActivity : AppCompatActivity() {
         swipeRefresh = findViewById(R.id.swipeRefresh)
         swipeRefresh.isEnabled = false
 
-        // init retrofit
-        val retrofit = Retrofit.Builder()
-                .baseUrl(Constants.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-        stackoverflowApi = retrofit.create(StackoverflowApi::class.java)
-
         // retrieve question ID passed from outside
         questionId = intent.extras!!.getString(EXTRA_QUESTION_ID)!!
+
+        fetchQuestionDetailUseCase = FetchQuestionDetailUseCase()
     }
 
     override fun onStart() {
@@ -68,21 +59,19 @@ class QuestionDetailsActivity : AppCompatActivity() {
         coroutineScope.launch {
             showProgressIndication()
             try {
-                val response = stackoverflowApi.questionDetails(questionId)
-                if (response.isSuccessful && response.body() != null) {
-                    val questionBody = response.body()!!.question.body
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        txtQuestionBody.text = Html.fromHtml(questionBody, Html.FROM_HTML_MODE_LEGACY)
-                    } else {
-                        @Suppress("DEPRECATION")
-                        txtQuestionBody.text = Html.fromHtml(questionBody)
+                val result = fetchQuestionDetailUseCase.fetchQuestionDetails(questionId)
+                when (result) {
+                    is FetchQuestionDetailUseCase.Result.Success -> {
+                        val questionBody = result.question.body
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            txtQuestionBody.text =
+                                Html.fromHtml(questionBody, Html.FROM_HTML_MODE_LEGACY)
+                        } else {
+                            @Suppress("DEPRECATION")
+                            txtQuestionBody.text = Html.fromHtml(questionBody)
+                        }
                     }
-                } else {
-                    onFetchFailed()
-                }
-            } catch (t: Throwable) {
-                if (t !is CancellationException) {
-                    onFetchFailed()
+                    is FetchQuestionDetailUseCase.Result.Failure -> onFetchFailed()
                 }
             } finally {
                 hideProgressIndication()
@@ -93,8 +82,8 @@ class QuestionDetailsActivity : AppCompatActivity() {
 
     private fun onFetchFailed() {
         supportFragmentManager.beginTransaction()
-                .add(ServerErrorDialogFragment.newInstance(), null)
-                .commitAllowingStateLoss()
+            .add(ServerErrorDialogFragment.newInstance(), null)
+            .commitAllowingStateLoss()
     }
 
     private fun showProgressIndication() {
