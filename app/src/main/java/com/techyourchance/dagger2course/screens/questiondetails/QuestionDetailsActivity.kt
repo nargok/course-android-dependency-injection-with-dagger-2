@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.techyourchance.dagger2course.R
 import com.techyourchance.dagger2course.questions.FetchQuestionDetailUseCase
+import com.techyourchance.dagger2course.screens.common.ScreenNavigator
 import com.techyourchance.dagger2course.screens.common.dialogs.DialogNavigator
 import com.techyourchance.dagger2course.screens.common.toolbar.MyToolbar
 import kotlinx.coroutines.*
@@ -25,6 +26,7 @@ class QuestionDetailsActivity : AppCompatActivity() {
     private lateinit var questionId: String
     private lateinit var fetchQuestionDetailUseCase: FetchQuestionDetailUseCase
     private lateinit var dialogNavigator: DialogNavigator
+    private lateinit var screenNavigator: ScreenNavigator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,9 +34,11 @@ class QuestionDetailsActivity : AppCompatActivity() {
 
         txtQuestionBody = findViewById(R.id.txt_question_body)
 
+        screenNavigator = ScreenNavigator(this)
+
         // init toolbar
         toolbar = findViewById(R.id.toolbar)
-        toolbar.setNavigateUpListener { onBackPressed() }
+        toolbar.setNavigateUpListener { screenNavigator.navigateBack() }
 
         // init pull-down-to-refresh (used as a progress indicator)
         swipeRefresh = findViewById(R.id.swipeRefresh)
