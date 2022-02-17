@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.techyourchance.dagger2course.R
 import com.techyourchance.dagger2course.questions.FetchQuestionDetailUseCase
-import com.techyourchance.dagger2course.screens.common.dialogs.ServerErrorDialogFragment
+import com.techyourchance.dagger2course.screens.common.dialogs.DialogNavigator
 import com.techyourchance.dagger2course.screens.common.toolbar.MyToolbar
 import kotlinx.coroutines.*
 
@@ -24,6 +24,7 @@ class QuestionDetailsActivity : AppCompatActivity() {
 
     private lateinit var questionId: String
     private lateinit var fetchQuestionDetailUseCase: FetchQuestionDetailUseCase
+    private lateinit var dialogNavigator: DialogNavigator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +44,8 @@ class QuestionDetailsActivity : AppCompatActivity() {
         questionId = intent.extras!!.getString(EXTRA_QUESTION_ID)!!
 
         fetchQuestionDetailUseCase = FetchQuestionDetailUseCase()
+
+        dialogNavigator = DialogNavigator(supportFragmentManager)
     }
 
     override fun onStart() {
@@ -81,9 +84,7 @@ class QuestionDetailsActivity : AppCompatActivity() {
     }
 
     private fun onFetchFailed() {
-        supportFragmentManager.beginTransaction()
-            .add(ServerErrorDialogFragment.newInstance(), null)
-            .commitAllowingStateLoss()
+        dialogNavigator.showServerErrorDialog()
     }
 
     private fun showProgressIndication() {
