@@ -8,6 +8,7 @@ import android.text.Html
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.techyourchance.dagger2course.MyApplication
 import com.techyourchance.dagger2course.R
 import com.techyourchance.dagger2course.questions.FetchQuestionDetailUseCase
 import com.techyourchance.dagger2course.screens.common.ScreenNavigator
@@ -47,7 +48,7 @@ class QuestionDetailsActivity : AppCompatActivity() {
         // retrieve question ID passed from outside
         questionId = intent.extras!!.getString(EXTRA_QUESTION_ID)!!
 
-        fetchQuestionDetailUseCase = FetchQuestionDetailUseCase()
+        fetchQuestionDetailUseCase = FetchQuestionDetailUseCase((application as MyApplication).retrofit)
 
         dialogNavigator = DialogNavigator(supportFragmentManager)
     }
