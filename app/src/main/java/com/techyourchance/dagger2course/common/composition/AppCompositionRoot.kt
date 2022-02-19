@@ -18,11 +18,11 @@ class AppCompositionRoot {
             .build()
     }
 
-    private val stackOverFlowApi: StackoverflowApi by lazy {
+    val stackOverFlowApi: StackoverflowApi by lazy {
         retrofit.create(StackoverflowApi::class.java)
     }
 
-    val fetchQuestionsUseCase get() = FetchQuestionsUseCase(stackOverFlowApi)
-    val fetchQuestionDetailUseCase get() = FetchQuestionDetailUseCase(stackOverFlowApi)
+//    val fetchQuestionsUseCase get() = FetchQuestionsUseCase(stackOverFlowApi)
+//    val fetchQuestionDetailUseCase get() = FetchQuestionDetailUseCase(stackOverFlowApi)
 
 }

@@ -34,7 +34,7 @@ class QuestionDetailsActivity : BaseActivity() {
 
         txtQuestionBody = findViewById(R.id.txt_question_body)
 
-        screenNavigator = ScreenNavigator(this)
+        screenNavigator = compositionRoot.screenManager
 
         // init toolbar
         toolbar = findViewById(R.id.toolbar)
@@ -48,7 +48,6 @@ class QuestionDetailsActivity : BaseActivity() {
         questionId = intent.extras!!.getString(EXTRA_QUESTION_ID)!!
 
         fetchQuestionDetailUseCase = compositionRoot.fetchQuestionDetailUseCase
-//        fetchQuestionDetailUseCase = FetchQuestionDetailUseCase((application as MyApplication).stackOverFlowApi)
 
         dialogNavigator = DialogNavigator(supportFragmentManager)
     }
