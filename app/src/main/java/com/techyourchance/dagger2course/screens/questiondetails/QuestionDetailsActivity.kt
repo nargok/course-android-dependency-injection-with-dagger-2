@@ -49,7 +49,7 @@ class QuestionDetailsActivity : BaseActivity() {
 
         fetchQuestionDetailUseCase = compositionRoot.fetchQuestionDetailUseCase
 
-        dialogNavigator = DialogNavigator(supportFragmentManager)
+        dialogNavigator = compositionRoot.dialogNavigator
     }
 
     override fun onStart() {

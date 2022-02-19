@@ -1,13 +1,14 @@
 package com.techyourchance.dagger2course.common.composition
 
-import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import com.techyourchance.dagger2course.networking.StackoverflowApi
 import com.techyourchance.dagger2course.questions.FetchQuestionDetailUseCase
 import com.techyourchance.dagger2course.questions.FetchQuestionsUseCase
 import com.techyourchance.dagger2course.screens.common.ScreenNavigator
+import com.techyourchance.dagger2course.screens.common.dialogs.DialogNavigator
 
 class ActivityCompositionRoot(
-    private val activity: Activity,
+    private val activity: AppCompatActivity,
     private val appCompositionRoot: AppCompositionRoot
 ) {
 
@@ -15,6 +16,9 @@ class ActivityCompositionRoot(
     val screenManager by lazy {
         ScreenNavigator(activity)
     }
+
+    private val fragmentManager get() = activity.supportFragmentManager
+    val dialogNavigator get() = DialogNavigator(fragmentManager)
 
     private val stackOverFlowApi: StackoverflowApi get() = appCompositionRoot.stackOverFlowApi
 
