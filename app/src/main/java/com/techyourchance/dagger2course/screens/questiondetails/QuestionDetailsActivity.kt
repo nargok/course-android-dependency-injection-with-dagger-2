@@ -6,17 +6,16 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.techyourchance.dagger2course.MyApplication
 import com.techyourchance.dagger2course.R
 import com.techyourchance.dagger2course.questions.FetchQuestionDetailUseCase
 import com.techyourchance.dagger2course.screens.common.ScreenNavigator
+import com.techyourchance.dagger2course.screens.common.activities.BaseActivity
 import com.techyourchance.dagger2course.screens.common.dialogs.DialogNavigator
 import com.techyourchance.dagger2course.screens.common.toolbar.MyToolbar
 import kotlinx.coroutines.*
 
-class QuestionDetailsActivity : AppCompatActivity() {
+class QuestionDetailsActivity : BaseActivity() {
 
     private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
@@ -48,7 +47,7 @@ class QuestionDetailsActivity : AppCompatActivity() {
         // retrieve question ID passed from outside
         questionId = intent.extras!!.getString(EXTRA_QUESTION_ID)!!
 
-        fetchQuestionDetailUseCase = (application as MyApplication).fetchQuestionDetailUseCase
+        fetchQuestionDetailUseCase = compositionRoot.fetchQuestionDetailUseCase
 //        fetchQuestionDetailUseCase = FetchQuestionDetailUseCase((application as MyApplication).stackOverFlowApi)
 
         dialogNavigator = DialogNavigator(supportFragmentManager)
