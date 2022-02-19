@@ -48,7 +48,8 @@ class QuestionDetailsActivity : AppCompatActivity() {
         // retrieve question ID passed from outside
         questionId = intent.extras!!.getString(EXTRA_QUESTION_ID)!!
 
-        fetchQuestionDetailUseCase = FetchQuestionDetailUseCase((application as MyApplication).stackOverFlowApi)
+        fetchQuestionDetailUseCase = (application as MyApplication).fetchQuestionDetailUseCase
+//        fetchQuestionDetailUseCase = FetchQuestionDetailUseCase((application as MyApplication).stackOverFlowApi)
 
         dialogNavigator = DialogNavigator(supportFragmentManager)
     }
