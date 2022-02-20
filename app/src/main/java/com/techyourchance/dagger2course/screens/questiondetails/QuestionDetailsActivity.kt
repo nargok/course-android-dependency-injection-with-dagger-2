@@ -20,7 +20,6 @@ class QuestionDetailsActivity : BaseActivity(), QuestionDetailViewMvc.Listener {
 
     private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
-    private lateinit var toolbar: MyToolbar
     private lateinit var questionId: String
     private lateinit var fetchQuestionDetailUseCase: FetchQuestionDetailUseCase
     private lateinit var dialogNavigator: DialogNavigator
@@ -30,7 +29,7 @@ class QuestionDetailsActivity : BaseActivity(), QuestionDetailViewMvc.Listener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewMvc = QuestionDetailViewMvc(LayoutInflater.from(this), null)
+        viewMvc = compositionRoot.viewMvcFactory.newQuestionDetailMvc(null)
         setContentView(viewMvc.rootView) // viewMvcのrootViewをセットしないと画面にコンテンツが描画されない
 
         screenNavigator = compositionRoot.screenManager
