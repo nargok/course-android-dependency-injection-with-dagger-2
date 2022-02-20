@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
+import android.view.LayoutInflater
 import android.widget.TextView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.techyourchance.dagger2course.R
@@ -15,34 +16,24 @@ import com.techyourchance.dagger2course.screens.common.dialogs.DialogNavigator
 import com.techyourchance.dagger2course.screens.common.toolbar.MyToolbar
 import kotlinx.coroutines.*
 
-class QuestionDetailsActivity : BaseActivity() {
+class QuestionDetailsActivity : BaseActivity(), QuestionDetailViewMvc.Listener {
 
     private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     private lateinit var toolbar: MyToolbar
-    private lateinit var swipeRefresh: SwipeRefreshLayout
-    private lateinit var txtQuestionBody: TextView
-
     private lateinit var questionId: String
     private lateinit var fetchQuestionDetailUseCase: FetchQuestionDetailUseCase
     private lateinit var dialogNavigator: DialogNavigator
     private lateinit var screenNavigator: ScreenNavigator
 
+    private lateinit var viewMvc: QuestionDetailViewMvc
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.layout_question_details)
-
-        txtQuestionBody = findViewById(R.id.txt_question_body)
+        viewMvc = QuestionDetailViewMvc(LayoutInflater.from(this), null)
+        setContentView(viewMvc.rootView) // viewMvcのrootViewをセットしないと画面にコンテンツが描画されない
 
         screenNavigator = compositionRoot.screenManager
-
-        // init toolbar
-        toolbar = findViewById(R.id.toolbar)
-        toolbar.setNavigateUpListener { screenNavigator.navigateBack() }
-
-        // init pull-down-to-refresh (used as a progress indicator)
-        swipeRefresh = findViewById(R.id.swipeRefresh)
-        swipeRefresh.isEnabled = false
 
         // retrieve question ID passed from outside
         questionId = intent.extras!!.getString(EXTRA_QUESTION_ID)!!
@@ -54,34 +45,30 @@ class QuestionDetailsActivity : BaseActivity() {
 
     override fun onStart() {
         super.onStart()
+        viewMvc.registerListener(this)
         fetchQuestionDetails()
     }
 
     override fun onStop() {
         super.onStop()
+        viewMvc.unregisterListener(this)
         coroutineScope.coroutineContext.cancelChildren()
     }
 
     private fun fetchQuestionDetails() {
         coroutineScope.launch {
-            showProgressIndication()
+            viewMvc.showProgressIndication()
             try {
                 val result = fetchQuestionDetailUseCase.fetchQuestionDetails(questionId)
                 when (result) {
                     is FetchQuestionDetailUseCase.Result.Success -> {
                         val questionBody = result.question.body
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            txtQuestionBody.text =
-                                Html.fromHtml(questionBody, Html.FROM_HTML_MODE_LEGACY)
-                        } else {
-                            @Suppress("DEPRECATION")
-                            txtQuestionBody.text = Html.fromHtml(questionBody)
-                        }
+                        viewMvc.bindQuestionBody(questionBody)
                     }
                     is FetchQuestionDetailUseCase.Result.Failure -> onFetchFailed()
                 }
             } finally {
-                hideProgressIndication()
+                viewMvc.hideProgressIndication()
             }
 
         }
@@ -91,12 +78,8 @@ class QuestionDetailsActivity : BaseActivity() {
         dialogNavigator.showServerErrorDialog()
     }
 
-    private fun showProgressIndication() {
-        swipeRefresh.isRefreshing = true
-    }
-
-    private fun hideProgressIndication() {
-        swipeRefresh.isRefreshing = false
+    override fun onBackClicked() {
+        screenNavigator.navigateBack()
     }
 
     companion object {
@@ -107,4 +90,5 @@ class QuestionDetailsActivity : BaseActivity() {
             context.startActivity(intent)
         }
     }
+
 }
