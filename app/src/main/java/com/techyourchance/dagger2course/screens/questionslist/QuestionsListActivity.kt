@@ -18,7 +18,7 @@ class QuestionsListActivity : BaseActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .add(R.id.frame_content, QuestionsListFragment())
+                .replace(R.id.frame_content, QuestionsListFragment())
                 .commit()
         }
     }
