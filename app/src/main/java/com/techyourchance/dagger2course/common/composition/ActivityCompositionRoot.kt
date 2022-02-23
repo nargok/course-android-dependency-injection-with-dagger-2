@@ -6,7 +6,7 @@ import com.techyourchance.dagger2course.networking.StackoverflowApi
 import com.techyourchance.dagger2course.screens.common.ScreenNavigator
 
 class ActivityCompositionRoot(
-    private val activity: AppCompatActivity,
+    val activity: AppCompatActivity,
     private val appCompositionRoot: AppCompositionRoot
 ) {
 
@@ -14,6 +14,8 @@ class ActivityCompositionRoot(
     val screenManager by lazy {
         ScreenNavigator(activity)
     }
+
+    val application get() = appCompositionRoot.application
 
     val layoutInflater: LayoutInflater get() = LayoutInflater.from(activity)
     val fragmentManager get() = activity.supportFragmentManager
