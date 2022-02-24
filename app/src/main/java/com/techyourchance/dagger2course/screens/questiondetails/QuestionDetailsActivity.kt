@@ -2,18 +2,12 @@ package com.techyourchance.dagger2course.screens.questiondetails
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.text.Html
-import android.view.LayoutInflater
-import android.widget.TextView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.techyourchance.dagger2course.R
 import com.techyourchance.dagger2course.questions.FetchQuestionDetailUseCase
 import com.techyourchance.dagger2course.screens.common.ScreenNavigator
 import com.techyourchance.dagger2course.screens.common.activities.BaseActivity
 import com.techyourchance.dagger2course.screens.common.dialogs.DialogNavigator
-import com.techyourchance.dagger2course.screens.common.toolbar.MyToolbar
+import com.techyourchance.dagger2course.screens.common.viewmvc.ViewMvcFactory
 import kotlinx.coroutines.*
 
 class QuestionDetailsActivity : BaseActivity(), QuestionDetailViewMvc.Listener {
@@ -21,25 +15,19 @@ class QuestionDetailsActivity : BaseActivity(), QuestionDetailViewMvc.Listener {
     private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     private lateinit var questionId: String
-    private lateinit var fetchQuestionDetailUseCase: FetchQuestionDetailUseCase
-    private lateinit var dialogNavigator: DialogNavigator
-    private lateinit var screenNavigator: ScreenNavigator
+    lateinit var fetchQuestionDetailUseCase: FetchQuestionDetailUseCase
+    lateinit var dialogNavigator: DialogNavigator
+    lateinit var screenNavigator: ScreenNavigator
+    lateinit var viewMvcFactory: ViewMvcFactory
 
     private lateinit var viewMvc: QuestionDetailViewMvc
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        injector.inject(this)
         super.onCreate(savedInstanceState)
-        viewMvc = compositionRoot.viewMvcFactory.newQuestionDetailMvc(null)
+        viewMvc = viewMvcFactory.newQuestionDetailMvc(null)
         setContentView(viewMvc.rootView) // viewMvcのrootViewをセットしないと画面にコンテンツが描画されない
-
-        screenNavigator = compositionRoot.screenManager
-
-        // retrieve question ID passed from outside
         questionId = intent.extras!!.getString(EXTRA_QUESTION_ID)!!
-
-        fetchQuestionDetailUseCase = compositionRoot.fetchQuestionDetailUseCase
-
-        dialogNavigator = compositionRoot.dialogNavigator
     }
 
     override fun onStart() {

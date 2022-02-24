@@ -1,5 +1,6 @@
-package com.techyourchance.dagger2course.common.composition
+package com.techyourchance.dagger2course.common.dependencyinjection
 
+import com.techyourchance.dagger2course.common.dependencyinjection.ActivityCompositionRoot
 import com.techyourchance.dagger2course.networking.StackoverflowApi
 import com.techyourchance.dagger2course.questions.FetchQuestionDetailUseCase
 import com.techyourchance.dagger2course.questions.FetchQuestionsUseCase
