@@ -11,7 +11,7 @@ class ActivityCompositionRoot(
 ) {
 
     // singletonにするため by lazyする
-    val screenManager by lazy {
+    val screenNavigator by lazy {
         ScreenNavigator(activity)
     }
 

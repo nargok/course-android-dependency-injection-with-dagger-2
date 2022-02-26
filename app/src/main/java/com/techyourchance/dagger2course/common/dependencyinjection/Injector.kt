@@ -8,7 +8,7 @@ import com.techyourchance.dagger2course.screens.common.viewmvc.ViewMvcFactory
 import java.lang.Exception
 import java.lang.reflect.Field
 
-class Injector(private val compositionRoot: PresentationCompositionRoot) {
+class Injector(private val component: PresentationComponent) {
 
     fun inject(client: Any) {
         for (field in getAllFields(client)) {
@@ -43,19 +43,19 @@ class Injector(private val compositionRoot: PresentationCompositionRoot) {
     private fun getServiceForClass(type: Class<*>): Any {
         when (type) {
             DialogNavigator::class.java -> {
-                return compositionRoot.dialogNavigator
+                return component.dialogNavigator()
             }
             ScreenNavigator::class.java -> {
-                return compositionRoot.screenManager
+                return component.screenNavigator()
             }
             FetchQuestionsUseCase::class.java -> {
-                return compositionRoot.fetchQuestionsUseCase
+                return component.fetchQuestionsUseCase()
             }
             FetchQuestionDetailUseCase::class.java -> {
-                return compositionRoot.fetchQuestionDetailUseCase
+                return component.fetchQuestionDetailsUseCase()
             }
             ViewMvcFactory::class.java -> {
-                return compositionRoot.viewMvcFactory
+                return component.viewMvcFactory()
             }
             else -> {
                 throw Exception("unsupported service type: $type")
