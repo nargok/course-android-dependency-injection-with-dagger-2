@@ -13,8 +13,9 @@ class ActivityModule(
     private val appComponent: AppComponent
 ) {
 
+    @ActivityScope
     @Provides
-    fun screenNavigator() = ScreenNavigator(activity)
+    fun screenNavigator(activity: AppCompatActivity) = ScreenNavigator(activity)
 
     @Provides
     fun application() = appComponent.application()
