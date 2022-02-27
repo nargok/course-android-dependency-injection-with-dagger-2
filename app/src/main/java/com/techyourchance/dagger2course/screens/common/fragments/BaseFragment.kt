@@ -7,11 +7,15 @@ import com.techyourchance.dagger2course.screens.common.activities.BaseActivity
 
 open class BaseFragment : Fragment() {
 
-    private val appCompositionRoot get() = ((requireActivity() as BaseActivity).application as MyApplication).appCompositionRoot
+    private val appComponent by lazy {
+        DaggerAppComponent.builder()
+            .appModule(AppModule((requireActivity() as BaseActivity).application as MyApplication))
+            .build()
+    }
 
     private val activityComponent by lazy {
         DaggerActivityComponent.builder()
-            .activityModule(ActivityModule((requireActivity() as BaseActivity), appCompositionRoot))
+            .activityModule(ActivityModule((requireActivity() as BaseActivity), appComponent))
             .build()
     }
 
