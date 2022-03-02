@@ -3,23 +3,27 @@ package com.techyourchance.dagger2course.screens.questiondetails
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.techyourchance.dagger2course.common.dependencyinjection.Service
 import com.techyourchance.dagger2course.questions.FetchQuestionDetailUseCase
 import com.techyourchance.dagger2course.screens.common.ScreenNavigator
 import com.techyourchance.dagger2course.screens.common.activities.BaseActivity
 import com.techyourchance.dagger2course.screens.common.dialogs.DialogNavigator
 import com.techyourchance.dagger2course.screens.common.viewmvc.ViewMvcFactory
 import kotlinx.coroutines.*
+import javax.inject.Inject
 
 class QuestionDetailsActivity : BaseActivity(), QuestionDetailViewMvc.Listener {
 
     private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     private lateinit var questionId: String
-    @field:Service private lateinit var fetchQuestionDetailUseCase: FetchQuestionDetailUseCase
-    @field:Service private lateinit var dialogNavigator: DialogNavigator
-    @field:Service private lateinit var screenNavigator: ScreenNavigator
-    @field:Service private lateinit var viewMvcFactory: ViewMvcFactory
+    @Inject // ファイルの外部からinjectされる要素
+    lateinit var fetchQuestionDetailUseCase: FetchQuestionDetailUseCase
+    @Inject
+    lateinit var dialogNavigator: DialogNavigator
+    @Inject
+    lateinit var screenNavigator: ScreenNavigator
+    @Inject
+    lateinit var viewMvcFactory: ViewMvcFactory
 
     private lateinit var viewMvc: QuestionDetailViewMvc
 

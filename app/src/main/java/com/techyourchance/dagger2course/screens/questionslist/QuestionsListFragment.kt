@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.techyourchance.dagger2course.common.dependencyinjection.Service
 import com.techyourchance.dagger2course.questions.FetchQuestionsUseCase
 import com.techyourchance.dagger2course.questions.Question
 import com.techyourchance.dagger2course.screens.common.ScreenNavigator
@@ -12,6 +11,7 @@ import com.techyourchance.dagger2course.screens.common.dialogs.DialogNavigator
 import com.techyourchance.dagger2course.screens.common.fragments.BaseFragment
 import com.techyourchance.dagger2course.screens.common.viewmvc.ViewMvcFactory
 import kotlinx.coroutines.*
+import javax.inject.Inject
 
 class QuestionsListFragment : BaseFragment(), QuestionListViewMvc.Listener {
 
@@ -19,10 +19,14 @@ class QuestionsListFragment : BaseFragment(), QuestionListViewMvc.Listener {
 
     private var isDataLoaded = false
 
-    @field:Service private lateinit var fetchQuestionsUseCase: FetchQuestionsUseCase
-    @field:Service private lateinit var dialogNavigator: DialogNavigator
-    @field:Service private lateinit var screenNavigator: ScreenNavigator
-    @field:Service private lateinit var viewMvcFactory: ViewMvcFactory
+    @Inject
+    lateinit var fetchQuestionsUseCase: FetchQuestionsUseCase
+    @Inject
+    lateinit var dialogNavigator: DialogNavigator
+    @Inject
+    lateinit var screenNavigator: ScreenNavigator
+    @Inject
+    lateinit var viewMvcFactory: ViewMvcFactory
 
     private lateinit var viewMvc: QuestionListViewMvc
 

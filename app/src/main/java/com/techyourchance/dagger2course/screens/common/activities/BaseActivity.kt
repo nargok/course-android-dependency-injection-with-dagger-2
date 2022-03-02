@@ -8,6 +8,7 @@ import com.techyourchance.dagger2course.common.dependencyinjection.activity.Dagg
 import com.techyourchance.dagger2course.common.dependencyinjection.app.AppModule
 import com.techyourchance.dagger2course.common.dependencyinjection.app.DaggerAppComponent
 import com.techyourchance.dagger2course.common.dependencyinjection.presentation.DaggerPresentationComponent
+import com.techyourchance.dagger2course.common.dependencyinjection.presentation.PresentationComponent
 import com.techyourchance.dagger2course.common.dependencyinjection.presentation.PresentationModule
 
 open class BaseActivity: AppCompatActivity() {
@@ -30,6 +31,6 @@ open class BaseActivity: AppCompatActivity() {
             .build()
     }
 
-    protected val injector get () = Injector(presentationComponent)
+    protected val injector: PresentationComponent get () = presentationComponent
 
 }
