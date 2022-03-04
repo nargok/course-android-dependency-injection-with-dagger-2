@@ -20,15 +20,10 @@ open class BaseFragment : Fragment() {
             .build()
     }
 
-    private val activityComponent by lazy {
-        DaggerActivityComponent.builder()
-            .activityModule(ActivityModule((requireActivity() as BaseActivity), appComponent))
-            .build()
-    }
-
     private val presentationComponent by lazy {
         DaggerPresentationComponent.builder()
-            .presentationModule(PresentationModule(activityComponent))
+            .activityComponent((requireActivity() as BaseActivity).activityComponent)
+            .presentationModule(PresentationModule())
             .build()
     }
 

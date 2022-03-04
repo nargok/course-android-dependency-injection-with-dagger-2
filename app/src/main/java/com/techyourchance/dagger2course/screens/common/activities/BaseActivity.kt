@@ -3,6 +3,7 @@ package com.techyourchance.dagger2course.screens.common.activities
 import androidx.appcompat.app.AppCompatActivity
 import com.techyourchance.dagger2course.MyApplication
 import com.techyourchance.dagger2course.common.dependencyinjection.*
+import com.techyourchance.dagger2course.common.dependencyinjection.activity.ActivityComponent
 import com.techyourchance.dagger2course.common.dependencyinjection.activity.ActivityModule
 import com.techyourchance.dagger2course.common.dependencyinjection.activity.DaggerActivityComponent
 import com.techyourchance.dagger2course.common.dependencyinjection.app.AppModule
@@ -19,7 +20,7 @@ open class BaseActivity: AppCompatActivity() {
             .build()
     }
 
-    private val activityComponent by lazy {
+    val activityComponent: ActivityComponent by lazy {
         DaggerActivityComponent.builder()
             .activityModule(ActivityModule(this, appComponent))
             .build()
@@ -27,7 +28,8 @@ open class BaseActivity: AppCompatActivity() {
 
     private val presentationComponent by lazy {
         DaggerPresentationComponent.builder()
-            .presentationModule(PresentationModule(activityComponent))
+            .activityComponent(activityComponent)
+            .presentationModule(PresentationModule())
             .build()
     }
 

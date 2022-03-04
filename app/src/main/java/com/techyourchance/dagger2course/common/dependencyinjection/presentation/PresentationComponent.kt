@@ -1,5 +1,7 @@
 package com.techyourchance.dagger2course.common.dependencyinjection.presentation
 
+import com.techyourchance.dagger2course.common.dependencyinjection.activity.ActivityComponent
+import com.techyourchance.dagger2course.common.dependencyinjection.activity.ActivityModule
 import com.techyourchance.dagger2course.questions.FetchQuestionDetailUseCase
 import com.techyourchance.dagger2course.questions.FetchQuestionsUseCase
 import com.techyourchance.dagger2course.screens.common.ScreenNavigator
@@ -9,7 +11,8 @@ import com.techyourchance.dagger2course.screens.questiondetails.QuestionDetailsA
 import com.techyourchance.dagger2course.screens.questionslist.QuestionsListFragment
 import dagger.Component
 
-@Component(modules = [PresentationModule::class])
+@PresentationScope
+@Component(dependencies = [ActivityComponent::class], modules = [PresentationModule::class])
 interface PresentationComponent {
 
     fun inject(fragment: QuestionsListFragment)
